@@ -1,3 +1,11 @@
+const pointArray = [
+        {"Name": "CC1", "Coords": [47.760785485800284, -122.19144283537825]},
+        {"Name": "CC2", "Coords": [47.76126869564072, -122.1918012919779]},
+        {"Name": "Discovery Hall", "Coords": [47.75901096541689, -122.19187604741245]},
+        {"Name": "UW2", "Coords": [47.75857529935412, -122.19127933723816]},
+        {"Name": "UW1", "Coords": [47.75899045183433, -122.19053861161326]},
+    ]
+
 mapboxgl.accessToken = 'pk.eyJ1IjoibWF4bWFsa2luIiwiYSI6ImNsczVpamxlODFoaG0ycnBhdzd1bTY4amMifQ.Rbe4ueQeIAE6AzCCbtIpqQ';
 
 const map = new mapboxgl.Map({
@@ -28,19 +36,7 @@ map.on('load', () => {
             type: 'geojson',
             data: {
                 type: 'FeatureCollection',
-                features: [
-                    {
-                        type: 'Feature',
-                        properties: {
-                            name: 'UW 2',
-                        },
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [-122.1911463, 47.758586], 
-                        },
-                    },
-                    // Add more buildings as needed
-                ],
+                features: loadPoints(pointArray)
             },
         },
         layout: {
@@ -53,3 +49,22 @@ map.on('load', () => {
         },
     });
 });
+
+//Function to easily load an array containing names and coords
+//Coords get reversed because copying points from google maps has it reversed from what mapbox uses so rather than switch them manually we can just paste the google coords in
+function loadPoints(points){
+    output = []
+    points.forEach((e) => output.push(
+        {
+            type: 'Feature',
+            properties: {
+                name: e.Name,
+            },
+            geometry: {
+                type: 'Point',
+            coordinates: [e.Coords[1], e.Coords[0]], 
+            }
+        }
+    ))
+    return output
+}
